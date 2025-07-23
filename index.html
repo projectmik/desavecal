@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Freedom Plan</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="gradient-bg">
+
+    <nav class="sticky top-0 bg-white/80 backdrop-blur-sm shadow-md z-20">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-3">
+                <a href="#" class="text-xl font-bold text-gray-800">Financial Stewardship</a>
+                <div class="hidden md:flex space-x-6">
+                    <a href="#pillar1" class="nav-link">Pillar 1: Budget</a>
+                    <a href="#pillar2" class="nav-link">Pillar 2: Emergency Fund</a>
+                    <a href="#pillar3" class="nav-link">Pillar 3: Debt Freedom</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8 max-w-6xl">
+        <header class="text-center my-12">
+            <h1 class="text-5xl font-bold text-gray-800 mb-2">Your Path to Self-Reliance</h1>
+            <p class="text-xl text-gray-600">Wisely managing the resources you've been given.</p>
+        </header>
+
+        <section id="pillar1" class="mb-24">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Pillar 1: Get Your Financial House in Order</h2>
+            <p class="text-lg text-center text-gray-600 mb-8">Create a plan and tell your money where to go.</p>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white p-8 rounded-lg shadow-soft">
+                    <h3 class="text-2xl font-semibold text-gray-700 mb-6">Budget Setup Tool</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="budget-income" class="block text-sm font-medium text-gray-700 mb-1">Total Monthly Income ($)</label>
+                            <input type="number" id="budget-income" class="input-highlight w-full px-4 py-2 border rounded-md">
+                        </div>
+                        
+                        <div class="pt-4">
+                            <h4 class="text-lg font-medium text-gray-700 mb-4 border-b pb-2">Master Monthly Expense List</h4>
+                            <div class="space-y-2" id="master-expenses-container"></div>
+                            <button id="add-master-expense" class="mt-3 bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition">+ Add Expense</button>
+                        </div>
+                        
+                        <div class="pt-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Needs (50% Target) <span class="text-xs text-gray-500">(auto-calculated)</span></label>
+                            <input type="number" id="budget-needs" class="input-highlight w-full px-4 py-2 border rounded-md bg-gray-100" readonly>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Wants (30% Target) <span class="text-xs text-gray-500">(auto-calculated)</span></label>
+                            <input type="number" id="budget-wants" class="input-highlight w-full px-4 py-2 border rounded-md bg-gray-100" readonly>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Savings & Debt (20% Target) <span class="text-xs text-gray-500">(from Pillar 3)</span></label>
+                            <input type="number" id="budget-savings" class="input-highlight w-full px-4 py-2 border rounded-md bg-gray-100" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div id="budget-results-container" class="bg-white p-8 rounded-lg shadow-soft flex flex-col justify-center items-center">
+                    <h3 class="text-2xl font-semibold text-gray-700 mb-4">Your Budget Breakdown</h3>
+                    <div class="chart-container">
+                        <canvas id="budgetChart"></canvas>
+                    </div>
+                    <div id="budget-summary" class="mt-4 text-center">
+                        <p class="text-lg text-gray-600">Money Left to Allocate</p>
+                        <p id="budget-remaining" class="text-3xl font-bold text-gray-800">$0.00</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="pillar2" class="mb-24">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Pillar 2: Protect Against the Unexpected</h2>
+            <p class="text-lg text-center text-gray-600 mb-8">Build your financial safety net with an emergency fund.</p>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white p-8 rounded-lg shadow-soft">
+                    <h3 class="text-2xl font-semibold text-gray-700 mb-6">Emergency Fund Calculator</h3>
+                    <div class="mb-6">
+                        <label for="current-savings" class="block text-sm font-medium text-gray-700 mb-1">How much do you have saved already? ($)</label>
+                        <input type="number" id="current-savings" class="input-highlight w-full px-4 py-2 border rounded-md" value="0">
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-medium text-gray-700 mb-4 border-b pb-2">Essential Monthly Expenses <span class="text-xs text-gray-500">(from Pillar 1 "Needs")</span></h4>
+                        <div class="space-y-2" id="ef-expenses-container"></div>
+                    </div>
+                </div>
+                <div id="ef-results-container" class="bg-white p-8 rounded-lg shadow-soft text-center">
+                    <p class="text-lg text-gray-600">Your 3-Month Emergency Fund Goal</p>
+                    <p class="text-5xl font-bold text-green-600 my-2" id="ef-3-month-goal">$0.00</p>
+                    <p id="ef-3-month-calc" class="text-xs text-gray-500 -mt-2 mb-4"> </p>
+                    <div class="w-full bg-gray-200 rounded-full h-4 my-4">
+                        <div id="ef-progress-bar" class="bg-green-500 h-4 rounded-full" style="width: 0%"></div>
+                    </div>
+                    <div class="flex justify-between w-full text-sm font-medium text-gray-600">
+                        <span id="ef-current-savings-label">$0.00</span>
+                        <span id="ef-goal-label">$0.00</span>
+                    </div>
+                    <hr class="w-full my-6">
+                    <div id="ef-timeline-projection" class="text-center space-y-2 mb-6 hidden">
+                        <p class="text-md text-gray-600">Projected Timeline to Goal</p>
+                        <p class="text-lg font-semibold text-gray-800" id="ef-timeline-text"></p>
+                    </div>
+                    <div id="ef-calculation-breakdown" class="text-left space-y-2 mb-6">
+                        <h4 class="text-md font-semibold text-gray-700 text-center">Monthly Expense Breakdown</h4>
+                    </div>
+                    <p class="text-md text-gray-600">Your 6-Month Goal</p>
+                    <p class="text-3xl font-semibold text-blue-600" id="ef-6-month-goal">$0.00</p>
+                    <p id="ef-6-month-calc" class="text-xs text-gray-500 mt-1"> </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="pillar3" class="mb-16">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Pillar 3: Gain Financial Freedom</h2>
+            <p class="text-lg text-center text-gray-600 mb-8">Create a plan to eliminate and avoid consumer debt.</p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white p-8 rounded-lg shadow-soft">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-semibold text-gray-700">Debt Freedom Calculator</h2>
+                        <button id="clear-btn" class="text-sm text-red-600 hover:text-red-800 font-medium">Clear Full Plan</button>
+                    </div>
+                    <div class="mb-8">
+                        <h3 class="text-lg font-medium text-gray-700 mb-4 border-b pb-2">Monthly Income <span class="text-xs text-gray-500">(from Pillar 1)</span></h3>
+                        <input type="number" id="primary-income" class="input-highlight w-full px-4 py-2 border rounded-md bg-gray-100" readonly>
+                    </div>
+                    <div class="mb-8">
+                        <h3 class="text-lg font-medium text-gray-700 mb-4 border-b pb-2">Total Monthly Expenses <span class="text-xs text-gray-500">(from Pillar 1)</span></h3>
+                        <input type="number" id="total-expenses-display" class="input-highlight w-full px-4 py-2 border rounded-md bg-gray-100" readonly>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-700 mb-4 border-b pb-2">Current Debts</h3>
+                        <div class="space-y-4" id="debts-container"></div>
+                        <button id="add-debt" class="mt-3 bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition">+ Add Another Debt</button>
+                    </div>
+                    <div class="mt-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Calculation Method</label>
+                        <div class="flex rounded-md shadow-sm">
+                            <button id="mode-extra-payment-btn" class="flex-1 p-2 bg-blue-600 text-white rounded-l-md text-sm focus:outline-none">By Extra Payment</button>
+                            <button id="mode-target-date-btn" class="flex-1 p-2 bg-white text-gray-700 rounded-r-md border border-gray-300 focus:outline-none">By Target Date</button>
+                        </div>
+                    </div>
+                    <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg space-y-4">
+                         <div>
+                            <label for="monthly-savings" class="block text-sm font-medium text-gray-700 mb-1">Monthly Savings Contribution ($)</label>
+                            <input type="number" id="monthly-savings" class="input-highlight w-full px-4 py-2 border rounded-md" value="0">
+                        </div>
+                        <div id="extra-payment-mode-content" class="calc-mode-content active">
+                            <label for="extra-payment" class="block text-sm font-medium text-gray-700 mb-1">Extra Monthly Debt Payment ($)</label>
+                            <input type="number" id="extra-payment" class="input-highlight w-full px-4 py-2 border rounded-md" value="0">
+                        </div>
+                        <div id="target-date-mode-content" class="calc-mode-content">
+                            <label for="target-months" class="block text-sm font-medium text-gray-700 mb-1">Target Months to Freedom</label>
+                            <input type="number" id="target-months" class="input-highlight w-full px-4 py-2 border rounded-md" value="0">
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <label for="payoff-strategy-select" class="block text-sm font-medium text-gray-700 mb-1">Debt Payoff Strategy</label>
+                        <select id="payoff-strategy-select" class="input-highlight w-full px-4 py-2 border rounded-md bg-white">
+                            <option value="snowball" selected>Debt Snowball (Lowest Balance First)</option>
+                            <option value="avalanche">Debt Avalanche (Highest Interest First)</option>
+                        </select>
+                    </div>
+                    <button id="save-plan-btn" class="w-full bg-green-600 text-white py-3 mt-8 rounded-md font-semibold hover:bg-green-700 transition text-lg">Save Plan</button>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-soft">
+                    <h2 class="text-2xl font-semibold text-gray-700 mb-6">Your Debt Freedom Plan</h2>
+                    <div id="results-container" class="text-center p-4 bg-gray-50 rounded-lg hidden">
+                        <div class="mb-8">
+                            <p class="text-gray-600">You'll be debt-free by</p>
+                            <p class="text-3xl font-bold text-green-600" id="projected-date">-</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 mb-8">
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-600">Total Debt</p>
+                                <p class="text-xl font-bold text-blue-700" id="total-debt">$0.00</p>
+                            </div>
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-600">Total Interest Paid</p>
+                                <p class="text-xl font-bold text-blue-700" id="total-interest">$0.00</p>
+                            </div>
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-600">Total Debt Payment</p>
+                                <p class="text-xl font-bold text-blue-700" id="total-payment">$0.00</p>
+                            </div>
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-600">Months to Freedom</p>
+                                <p class="text-xl font-bold text-blue-700" id="months-to-freedom">0</p>
+                            </div>
+                        </div>
+                        <div id="cost-of-debt-summary" class="mb-8 p-4 border-t border-b">
+                            <h3 class="text-lg font-semibold text-gray-700 mb-3">The True Cost of Your Debt</h3>
+                            <div class="grid grid-cols-3 text-center">
+                                <div><p class="text-sm text-gray-600">Original Debt</p><p class="text-lg font-bold text-gray-800" id="cod-original-debt">$0.00</p></div>
+                                <div><p class="text-sm text-gray-600">+</p><p class="text-lg font-bold text-red-600" id="cod-total-interest">$0.00</p><p class="text-xs text-red-600">(Interest)</p></div>
+                                <div><p class="text-sm text-gray-600">=</p><p class="text-lg font-bold text-gray-800" id="cod-total-repaid">$0.00</p><p class="text-xs text-gray-600">(Total Repaid)</p></div>
+                            </div>
+                        </div>
+                        <canvas id="debtProgressChart" height="200"></canvas>
+                        <canvas id="expensesChart" class="mt-8" height="200"></canvas>
+                        <div class="mt-8 text-left">
+                            <h3 class="text-lg font-medium text-gray-700 mb-3">Your Payoff Strategy</h3>
+                            <ul class="space-y-2 text-gray-600 list-disc list-inside" id="payoff-strategy"></ul>
+                        </div>
+                        <div id="insight-container" class="mt-8 p-4 rounded-lg border text-sm text-left">
+                            <h4 class="font-semibold mb-2">Financial Insights</h4>
+                            <p id="financial-insight"></p>
+                        </div>
+                        <div class="mt-8 text-left">
+                            <details>
+                                <summary class="text-lg font-medium text-gray-700 mb-3 hover:text-blue-600">View Detailed Payment Schedule</summary>
+                                <div id="payment-schedule-container" class="mt-4 max-h-96 overflow-y-auto border rounded-lg p-4 bg-white"></div>
+                            </details>
+                        </div>
+                        <button id="print-btn" class="hidden w-full bg-gray-600 text-white py-3 mt-8 rounded-md font-semibold hover:bg-gray-700 transition text-lg">Print Full Report</button>
+                    </div>
+                    <div id="empty-state" class="text-center p-8">
+                        <img src="https://placehold.co/300x200/e0e7ff/3730a3?text=Enter+Your+Data" alt="Illustration of financial documents" class="mx-auto mb-6 rounded-lg">
+                        <h3 class="text-xl font-medium text-gray-700 mb-2">Enter Your Financial Details</h3>
+                        <p class="text-gray-600 mb-4">Fill in the fields to see your personalized debt freedom plan.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
